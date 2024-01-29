@@ -56,6 +56,10 @@ font.init()
 font = font.Font(None, 35)
 lose1 = font.render('PLAYER 1 LOSE!', True, (180, 0, 0))
 lose2 = font.render('PLAYER 2 LOSE!', True, (180, 0, 0))
+text_score = font.render('Score', True, (180, 0, 0))
+
+Player1_score = 0
+Player2_score = 0
 while game:
     for e in event.get():
         if e.type == QUIT:
@@ -67,17 +71,26 @@ while game:
         ball.rect.x += speed_x
         ball.rect.y += speed_y
     
+        value_score = font.render(str(Player1_score) + " " + str(Player2_score), True, (122, 185, 85))
         if sprite.collide_rect(racket1, ball) or sprite.collide_rect(racket2, ball):
            speed_x*=-1
         if ball.rect.y < 0 or ball.rect.y > win_height - 50:
             speed_y*=-1
         if ball.rect.x < 0:
-            window.blit(lose1, (200, 200))
-            finish = True
+            
+            Player2_score += 1
+            ball.rect.x = 300
         if ball.rect.x > 600:
+            Player1_score += 1
+            ball.rect.x = 300
+        if Player1_score >= 3:
             window.blit(lose2, (200, 200))
             finish = True
-
+        elif Player2_score >= 3:
+            window.blit(lose1, (200, 200))
+            finish = True
+        window.blit(text_score, (275, 50))
+        window.blit(value_score, (275, 100))
         racket1.reset()
         racket2.reset()
         ball.reset()
